@@ -1,0 +1,23 @@
+{
+  "name": "little-alchemist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jordan R",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^20.5.6",
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.3.1",
+    "mongodb": "^6.0.0",
+    "mongoose": "^7.5.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
