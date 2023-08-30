@@ -39,3 +39,14 @@ export async function createCards(newCards: Card[]) {
     mongoose.disconnect();
   }
 }
+
+export async function updateCard(cardName: string) {
+  try {
+    await mongoose.connect(uri);
+    const res = await CardModel.updateOne({ card_name: cardName }, { source: 'USS Enterprise' });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    mongoose.disconnect();
+  }
+}

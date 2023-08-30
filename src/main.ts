@@ -214,11 +214,18 @@ async function addSourceToExistingDocuments() {
 
   console.log(cards[0]?.source);
 
-  // const numToProcess = 300;
-  // for (let index = 0; index < numToProcess; index++) {
-  //   const link = data[index];
-    
-  // }
+  const numToProcess = 1;
+  for (let index = 0; index < numToProcess; index++) {
+    const link = data[index];
+    const card = await createCardObj(link);
+    const dbCard = cards.find(c => c.card_name === card?.card_name);
+    if (card && dbCard) {
+      console.log(`[${new Date(Date.now()).toISOString()}] updating source for: ${card.card_name}`);
+      
+    }
+
+    await setTimeout(3_000);
+  }
 }
 
 addSourceToExistingDocuments();
