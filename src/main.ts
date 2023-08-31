@@ -3,7 +3,7 @@ import axios from 'axios';
 import { downloadFile, readFromFile, writeToFile } from './file';
 import { Card, CardCombos, CardForm, CardFusion, CardRarity, CardUpgradeStats } from './card/card';
 import { setTimeout } from 'timers/promises';
-import { createCard, createCards, getCards } from './mongodb';
+import { mongoConnect, createCard, createCards, getCards, updateCard, mongoDisconnect } from './mongodb';
 
 const baseUrl = 'https://lil-alchemist.fandom.com'
 
@@ -206,26 +206,31 @@ async function getLinks(): Promise<string[]> {
 }
 
 async function addSourceToExistingDocuments() {
+  mongoConnect();
+
   // get links
   const data: string[] = await getLinks();
 
   // get cards in db
   const cards: Card[] = await getCards();
 
-  console.log(cards[0]?.source);
-
-  const numToProcess = 1;
-  for (let index = 0; index < numToProcess; index++) {
+  const start = 256;
+  const numToProcess = 299;
+  for (let index = start; index < numToProcess; index++) {
     const link = data[index];
     const card = await createCardObj(link);
-    const dbCard = cards.find(c => c.card_name === card?.card_name);
-    if (card && dbCard) {
-      console.log(`[${new Date(Date.now()).toISOString()}] updating source for: ${card.card_name}`);
-      
+    const dbCard = cards?.find(c => c.card_name === card?.card_name);
+    if (card && dbCard && dbCard?.source === undefined) {
+      updateCard(card.card_name, { source: link });
+      console.log(`[${new Date(Date.now()).toISOString()}] updated source for: ${card.card_name}`);
     }
 
+    console.log('index: ', index);
+    console.log('Progress: ', ((index - start) / (numToProcess - start) * 100).toFixed(2), '%');
     await setTimeout(3_000);
   }
+
+  mongoDisconnect();
 }
 
 addSourceToExistingDocuments();
